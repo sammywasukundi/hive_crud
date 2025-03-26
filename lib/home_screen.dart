@@ -45,7 +45,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 return Padding(
                   padding: const EdgeInsets.only(bottom: 10),
                   child: Card(
-                    color: Colors.blueGrey[300],
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                    elevation: 1.0,
+                    shadowColor: Colors.blueGrey[300],
+                    color: Colors.white30,
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
                         vertical: 15,
@@ -69,18 +74,18 @@ class _HomeScreenState extends State<HomeScreen> {
                               Spacer(),
                               InkWell(
                                 onTap: () {
-                                  //delete(data[index]);
+                                  delete(data[index]);
                                 },
-                                child: Icon(Icons.delete, color: Colors.white),
+                                child: Icon(Icons.delete, color: Colors.red),
                               ),
                               SizedBox(width: 15),
                               InkWell(
                                 onTap: () {
-                                  // _editDialog(
-                                  //   data[index],
-                                  //   data[index].title.toString(),
-                                  //   data[index].description.toString(),
-                                  // );
+                                  _editDialog(
+                                    data[index],
+                                    data[index].title.toString(),
+                                    data[index].description.toString(),
+                                  );
                                 },
                                 child: Icon(Icons.edit, color: Colors.white),
                               ),
@@ -120,11 +125,96 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  Future<void> delete(NotesModel notesModel) async {
+    await notesModel.delete();
+  }
+
+  Future<void> _editDialog(
+    NotesModel notesModel,
+    String title,
+    String description,
+  ) async {
+    titleController.text = title;
+    descriptionController.text = description;
+
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(2.0),
+          ),
+          title: Text('Edit NOTES'),
+          content: SingleChildScrollView(
+            child: Column(
+              children: [
+                TextFormField(
+                  controller: titleController,
+                  decoration: const InputDecoration(
+                    hintText: 'Enter title',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                TextFormField(
+                  controller: descriptionController,
+                  decoration: const InputDecoration(
+                    hintText: 'Enter description',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text(
+                'Cancel',
+                style: TextStyle(
+                  color: Colors.blueAccent,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+
+            TextButton(
+              onPressed: () async {
+                notesModel.title = titleController.text.toString();
+                notesModel.description = descriptionController.text.toString();
+
+                notesModel.save();
+                descriptionController.clear();
+                titleController.clear();
+
+                // box.
+
+                Navigator.pop(context);
+              },
+              child: Text(
+                'Edit',
+                style: TextStyle(
+                  color: Colors.blueAccent,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   Future<void> _showMyDialog() async {
     return showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(2.0),
+          ),
           title: Text('Add NOTES'),
           content: SingleChildScrollView(
             child: Column(
@@ -152,7 +242,13 @@ class _HomeScreenState extends State<HomeScreen> {
               onPressed: () {
                 Navigator.pop(context);
               },
-              child: const Text('Cancel'),
+              child: Text(
+                'Cancel',
+                style: TextStyle(
+                  color: Colors.blueAccent,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
             ),
 
             TextButton(
@@ -174,7 +270,13 @@ class _HomeScreenState extends State<HomeScreen> {
 
                 Navigator.pop(context);
               },
-              child: Text('Add'),
+              child: Text(
+                'Add',
+                style: TextStyle(
+                  color: Colors.blueAccent,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
             ),
           ],
         );

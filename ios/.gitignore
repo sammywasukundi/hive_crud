@@ -26,6 +26,16 @@ Flutter/flutter_assets/
 Flutter/flutter_export_environment.sh
 ServiceDefinitions.json
 Runner/GeneratedPluginRegistrant.*
+/.idea/
+/.dart_tool/
+/andoird/
+/build/
+/ios/
+/linux/
+/macos/
+/test/
+/web/
+/windows/
 
 # Exceptions to above rules.
 !default.mode1v3
